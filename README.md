@@ -24,6 +24,13 @@ pip install -r requirements.txt
 5. Run YOLOv8 inference on the example image (saves overlay + logs to SQLite)  
    `python -m src.detection.infer_yolo`
 
+6. Generate a synthetic segmentation mask (ground truth)  
+   `python -m src.segmentation.make_synthetic_mask`
+
+7. Visualize mask overlay + log mask stats to SQLite  
+   `python -m src.segmentation.visualize_mask_overlay`
+
+
 ## Generated outputs
 
 - `outputs/smoke_test.png`
@@ -31,3 +38,6 @@ pip install -r requirements.txt
 - `outputs/preprocess_comparison.png`
 - `outputs/experiments.sqlite` (runs + metrics)
 - `outputs/yolo_example_pred.png`
+- `data/processed/masks/example_mask.png`
+- `outputs/segmentation_mask_overlay.png`
+
