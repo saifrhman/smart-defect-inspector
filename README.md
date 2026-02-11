@@ -21,9 +21,13 @@ pip install -r requirements.txt
 4. Save a before/after comparison figure  
    `python -m src.eval.visualize_preprocess`
 
+5. Run YOLOv8 inference on the example image (saves overlay + logs to SQLite)  
+   `python -m src.detection.infer_yolo`
+
 ## Generated outputs
 
 - `outputs/smoke_test.png`
 - `outputs/smoke_test_preprocessed.png`
 - `outputs/preprocess_comparison.png`
 - `outputs/experiments.sqlite` (runs + metrics)
+- `outputs/yolo_example_pred.png`
