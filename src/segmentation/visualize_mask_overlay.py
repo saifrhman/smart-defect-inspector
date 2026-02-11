@@ -4,6 +4,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from src.db.log_run import create_run, log_metrics
+
 
 def main() -> None:
     img_path = Path("data/processed/images/example.png")
@@ -16,6 +18,22 @@ def main() -> None:
 
     img = cv2.imread(str(img_path))
     mask = cv2.imread(str(mask_path), cv2.IMREAD_GRAYSCALE)
+
+        # --- Mask stats + SQLite logging ---
+    defect_pixels = int((mask > 0).sum())
+    total_pixels = int(mask.size)
+    defect_ratio = defect_pixels / total_pixels
+
+    run_id = create_run(
+        task="segmentation",
+        model_name="synthetic-mask",
+        dataset_name="synthetic",
+        notes="synthetic ground-truth mask overlay + stats",
+    )
+    log_metrics(run_id, {"defect_pixels": float(defect_pixels), "defect_ratio": float(defect_ratio)})
+
+    print(f"Logged run_id: {run_id}")
+
 
     # Make a red overlay where mask is 255
     overlay = img.copy()
