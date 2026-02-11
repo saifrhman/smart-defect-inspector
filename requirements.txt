@@ -1,0 +1,11 @@
+numpy
+pandas
+opencv-python
+matplotlib
+seaborn
+scikit-learn
+tqdm
+python-dotenv
+pydantic
+fastapi
+uvicorn
