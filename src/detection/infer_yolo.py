@@ -9,7 +9,15 @@ from src.db.log_run import create_run, log_metrics
 
 
 def main() -> None:
-    img_path = Path("data/processed/images/example.png")
+    # Pick the first available image from processed NEU-DET folders
+    candidates = list(Path("data/processed/images").rglob("*.jpg"))
+    if not candidates:
+        candidates = list(Path("data/processed/images").rglob("*.png"))
+    if not candidates:
+        raise FileNotFoundError("No images found in data/processed/images. Run: python -m src.data.make_dataset")
+
+    img_path = candidates[0]
+
     if not img_path.exists():
         raise FileNotFoundError("Run: python -m src.data.make_dataset first")
 
