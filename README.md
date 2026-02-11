@@ -129,3 +129,7 @@ Reproducible validation
 Hybrid CV workflows
 
 
+### Fiji defect ratio distribution (from SQLite)
+![Defect Ratio Histogram](docs/images/defect_ratio_hist.png)
+
+
