@@ -6,6 +6,8 @@ from src.db.log_run import create_run, log_metrics
 
 from src.preprocess.transforms import PreprocessConfig, apply_preprocess
 
+from src.utils.config import load_config
+
 
 def main() -> None:
     in_path = Path("outputs/smoke_test.png")
@@ -13,7 +15,16 @@ def main() -> None:
         raise FileNotFoundError("Run: python src/utils/smoke_test.py first")
 
     img = cv2.imread(str(in_path))
-    cfg = PreprocessConfig(to_gray=True, denoise=True, clahe=True, normalize=True)
+    app_cfg = load_config()
+    p = app_cfg["preprocess"]
+
+    cfg = PreprocessConfig(
+        to_gray=bool(p["to_gray"]),
+        denoise=bool(p["denoise"]),
+        clahe=bool(p["clahe"]),
+        blur_ksize=int(p["blur_ksize"]),
+        normalize=bool(p["normalize"]),
+    )
     out = apply_preprocess(img, cfg)
 
     out_path = Path("outputs/smoke_test_preprocessed.png")
