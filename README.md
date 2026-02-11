@@ -6,6 +6,21 @@
 ```bash
 pip install -r requirements.txt
 
+### Run full demo pipeline
+
+```bash
+python run_all.py
+
+This executes:
+
+- Smoke test image generation
+- Dataset scaffold
+- Preprocessing + SQLite logging
+- SQL query display
+- Preprocessing visualization
+- Synthetic mask generation
+- Segmentation overlay + logging
+
 
 ## Pipeline (so far)
 
@@ -40,4 +55,17 @@ pip install -r requirements.txt
 - `outputs/yolo_example_pred.png`
 - `data/processed/masks/example_mask.png`
 - `outputs/segmentation_mask_overlay.png`
+
+## Project Purpose
+
+Smart Defect Inspector demonstrates an end-to-end computer vision workflow for:
+
+- Image preprocessing
+- Defect detection
+- Defect segmentation
+- Experiment tracking
+- Visual reporting
+
+Designed as a portfolio + applied ML engineering project.
+
 
