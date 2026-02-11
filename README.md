@@ -68,4 +68,64 @@ Smart Defect Inspector demonstrates an end-to-end computer vision workflow for:
 
 Designed as a portfolio + applied ML engineering project.
 
+## Dataset Inspection (Fiji/ImageJ)
+
+Raw NEU-DET images were inspected using Fiji for:
+
+- Contrast/illumination analysis
+- Noise characteristics
+- Defect morphology understanding
+
+## Reproducible Reports
+
+Experiment runs, metrics, and image analysis outputs are stored in:
+
+- `outputs/experiments.sqlite`
+
+Metrics can be exported to CSV:
+
+```bash
+python -m src.db.export_metrics_csv
+
+
+
+
+Fiji / ImageJ Classical CV Baseline
+
+This project integrates Fiji (ImageJ) for classical image analysis:
+
+Classical segmentation workflow
+
+Open image in Fiji
+
+Apply thresholding / filtering
+
+Convert to Mask
+
+Save mask → data/processed/fiji_masks/
+
+Batch mask generation
+
+Fiji macros are used for automated mask creation across datasets.
+
+Python integration
+
+Generated masks are:
+
+Loaded into Python
+
+Overlaid on images
+
+Quantified (defect ratio, pixel stats)
+
+Logged into SQLite experiment tracker
+
+This enables:
+
+Classical vs ML/DL comparison
+
+Reproducible validation
+
+Hybrid CV workflows
+
 
