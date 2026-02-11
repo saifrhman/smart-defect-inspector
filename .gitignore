@@ -205,3 +205,46 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ---------- Data (never commit) ----------
+data/
+datasets/
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# ---------- Outputs / runs ----------
+outputs/
+runs/
+reports/
+logs/
+wandb/
+mlruns/
+checkpoints/
+*.pt
+*.pth
+*.onnx
+
+# ---------- Notebooks ----------
+.ipynb_checkpoints/
+
+# ---------- Python / env ----------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+*.egg-info/
+
+# ---------- OS / editor ----------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ---------- Large images ----------
+*.tif
+*.tiff
+
