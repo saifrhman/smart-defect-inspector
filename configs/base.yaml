@@ -1,0 +1,12 @@
+project:
+  name: smart-defect-inspector
+
+preprocess:
+  to_gray: true
+  denoise: true
+  clahe: true
+  blur_ksize: 3
+  normalize: true
+
+db:
+  path: outputs/experiments.sqlite
