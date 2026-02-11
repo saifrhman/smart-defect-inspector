@@ -5,6 +5,8 @@ import cv2
 
 from ultralytics import YOLO
 
+from src.db.log_run import create_run, log_metrics
+
 
 def main() -> None:
     img_path = Path("data/processed/images/example.png")
@@ -27,6 +29,17 @@ def main() -> None:
 
     # Print basic info
     n_boxes = 0 if results[0].boxes is None else len(results[0].boxes)
+    run_id = create_run(
+        task="detection",
+        model_name="yolov8n",
+        dataset_name="synthetic",
+        notes="pretrained yolov8n inference on example.png",
+    )
+    log_metrics(run_id, {"detections": float(n_boxes)})
+
+    print(f"Logged run_id: {run_id}")
+
+
     print(f"Saved: {out_path.resolve()}")
     print(f"Detections: {n_boxes}")
 
