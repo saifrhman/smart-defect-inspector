@@ -5,14 +5,27 @@ import cv2
 import numpy as np
 import torch
 
+import argparse
+
 from src.segmentation.unet import UNetSmall
 from src.db.log_run import create_run, log_metrics
 
 
-def load_pair() -> tuple[Path, Path]:
-    # pick any paired sample from data/segmentation
+def load_pair(stem: str | None) -> tuple[Path, Path]:
     img_dir = Path("data/segmentation/images")
     msk_dir = Path("data/segmentation/masks")
+
+    if stem:
+        # allow passing either "scratches_23" or "scratches_23.jpg"
+        s = Path(stem).stem
+        matches = list(img_dir.glob(f"{s}.*"))
+        if not matches:
+            raise FileNotFoundError(f"No image found for stem '{s}' in {img_dir}")
+        img_path = matches[0]
+        mask_path = msk_dir / f"{img_path.stem}.png"
+        if not mask_path.exists():
+            raise FileNotFoundError(f"Missing mask: {mask_path}")
+        return img_path, mask_path
 
     imgs = sorted([p for p in img_dir.iterdir() if p.suffix.lower() in {".jpg", ".png", ".jpeg"}])
     if not imgs:
@@ -22,7 +35,6 @@ def load_pair() -> tuple[Path, Path]:
     mask_path = msk_dir / f"{img_path.stem}.png"
     if not mask_path.exists():
         raise FileNotFoundError(f"Missing mask: {mask_path}")
-
     return img_path, mask_path
 
 
@@ -39,7 +51,12 @@ def main() -> None:
     if not weights.exists():
         raise FileNotFoundError("Missing weights. Train first: python -m src.segmentation.train_unet")
 
-    img_path, gt_mask_path = load_pair()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sample", type=str, default=None, help="Image stem or filename, e.g. scratches_23")
+    args = parser.parse_args()
+
+    img_path, gt_mask_path = load_pair(args.sample)
+
 
     # Load + preprocess
     img_bgr = cv2.imread(str(img_path))
@@ -73,7 +90,13 @@ def main() -> None:
 
     # Save predicted mask (white=defect)
     pred_mask = (pred.astype(np.uint8) * 255)
-    out_pred = Path("outputs/unet_pred_mask.png")
+    sample_name = img_path.stem
+    out_dir = Path("outputs/unet") / sample_name
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    out_pred = out_dir / "pred_mask.png"
+    out_overlay = out_dir / "pred_overlay.png"
+
     cv2.imwrite(str(out_pred), pred_mask)
 
     # Save overlay on original resized image
@@ -83,7 +106,6 @@ def main() -> None:
     alpha = 0.45
     overlay[pred] = (alpha * red[pred] + (1 - alpha) * overlay[pred]).astype(np.uint8)
 
-    out_overlay = Path("outputs/unet_pred_overlay.png")
     cv2.imwrite(str(out_overlay), overlay)
 
     # Log
