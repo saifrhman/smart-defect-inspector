@@ -53,26 +53,6 @@ This project demonstrates how these components interact within a structured ML p
 Raw images → Preprocessing → Classical CV baseline (Fiji) → DL detection (YOLO) → DL segmentation (U-Net) → Metrics → SQLite logging → Reports
 
 
-## Quickstart
-
-### 1) Install dependencies
-```bash
-pip install -r requirements.txt
-
-### Run full demo pipeline
-
-```bash
-python run_all.py
-
-This executes:
-
-- Smoke test image generation
-- Dataset scaffold
-- Preprocessing + SQLite logging
-- SQL query display
-- Preprocessing visualization
-- Synthetic mask generation
-- Segmentation overlay + logging
 
 
 ## Pipeline (so far)
@@ -129,6 +109,38 @@ Raw NEU-DET images were inspected using Fiji for:
 - Noise characteristics
 - Defect morphology understanding
 
+
+### Fiji defect ratio distribution (from SQLite)
+![Defect Ratio Histogram](docs/images/defect_ratio_hist.png)
+
+### U-Net Segmentation (trained on Fiji masks)
+![U-Net Overlay](docs/images/unet_pred_overlay.png)
+
+Predicted mask:
+![U-Net Mask](docs/images/unet_pred_mask.png)
+
+## Results (current)
+
+- U-Net (trained on Fiji masks): Dice vs Fiji mask ≈ Dice vs Fiji: 0.8652
+
+## U-Net Inference Leaderboard (SQLite → CSV)
+
+Export a leaderboard of U-Net inference runs (Dice/IoU vs Fiji masks):
+
+```bash
+python -m src.segmentation.export_unet_leaderboard
+```
+Output: outputs/unet_leaderboard.csv
+
+## Quick “Top 5” preview
+head -n 6 outputs/unet_leaderboard.csv
+
+## Model Evaluation: Fiji vs U-Net
+
+This figure compares a classical Fiji/ImageJ mask (threshold-based baseline) against the U-Net segmentation prediction trained on Fiji-generated masks.
+
+![Fiji vs U-Net](docs/images/fiji_vs_unet.png)
+
 ## Reproducible Reports
 
 Experiment runs, metrics, and image analysis outputs are stored in:
@@ -139,7 +151,7 @@ Metrics can be exported to CSV:
 
 ```bash
 python -m src.db.export_metrics_csv
-
+```
 
 
 
@@ -182,37 +194,25 @@ Reproducible validation
 Hybrid CV workflows
 
 
-### Fiji defect ratio distribution (from SQLite)
-![Defect Ratio Histogram](docs/images/defect_ratio_hist.png)
 
-### U-Net Segmentation (trained on Fiji masks)
-![U-Net Overlay](docs/images/unet_pred_overlay.png)
+## Quickstart
 
-Predicted mask:
-![U-Net Mask](docs/images/unet_pred_mask.png)
+### 1) Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-## Results (current)
-
-- U-Net (trained on Fiji masks): Dice vs Fiji mask ≈ Dice vs Fiji: 0.8652
-
-## U-Net Inference Leaderboard (SQLite → CSV)
-
-Export a leaderboard of U-Net inference runs (Dice/IoU vs Fiji masks):
+### Run full demo pipeline
 
 ```bash
-python -m src.segmentation.export_unet_leaderboard
+python run_all.py
+```
+This executes:
 
-Output:
-
-outputs/unet_leaderboard.csv
-
-
-## Quick “Top 5” preview
-head -n 6 outputs/unet_leaderboard.csv
-
-## Model Evaluation: Fiji vs U-Net
-
-This figure compares a classical Fiji/ImageJ mask (threshold-based baseline) against the U-Net segmentation prediction trained on Fiji-generated masks.
-
-![Fiji vs U-Net](docs/images/fiji_vs_unet.png)
-
+- Smoke test image generation
+- Dataset scaffold
+- Preprocessing + SQLite logging
+- SQL query display
+- Preprocessing visualization
+- Synthetic mask generation
+- Segmentation overlay + logging

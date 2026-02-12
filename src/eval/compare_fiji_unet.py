@@ -1,16 +1,23 @@
 from __future__ import annotations
 
+from html import parser
 from pathlib import Path
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
+import argparse
+
 from src.segmentation.unet import UNetSmall
 
 
 def main() -> None:
-    sample = "scratches_23"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sample", type=str, default="scratches_23", help="Stem or filename, e.g. scratches_23")
+    args = parser.parse_args()
+    sample = Path(args.sample).stem
+
 
     img_path = Path(f"data/segmentation/images/{sample}.jpg")
     fiji_mask_path = Path(f"data/segmentation/masks/{sample}.png")
