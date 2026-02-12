@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
+
 import cv2
 import numpy as np
 import torch
-
-import argparse
 
 from src.segmentation.unet import UNetSmall
 from src.db.log_run import create_run, log_metrics
@@ -16,8 +16,7 @@ def load_pair(stem: str | None) -> tuple[Path, Path]:
     msk_dir = Path("data/segmentation/masks")
 
     if stem:
-        # allow passing either "scratches_23" or "scratches_23.jpg"
-        s = Path(stem).stem
+        s = Path(stem).stem  # allow "scratches_23" or "scratches_23.jpg"
         matches = list(img_dir.glob(f"{s}.*"))
         if not matches:
             raise FileNotFoundError(f"No image found for stem '{s}' in {img_dir}")
@@ -46,17 +45,24 @@ def dice(pred: np.ndarray, gt: np.ndarray, eps: float = 1e-6) -> float:
     return float((2 * inter + eps) / (union + eps))
 
 
-def main() -> None:
-    weights = Path("outputs/unet/best.pt")
-    if not weights.exists():
-        raise FileNotFoundError("Missing weights. Train first: python -m src.segmentation.train_unet")
+def iou(pred: np.ndarray, gt: np.ndarray, eps: float = 1e-6) -> float:
+    pred = pred.astype(np.bool_)
+    gt = gt.astype(np.bool_)
+    inter = (pred & gt).sum()
+    union = (pred | gt).sum()
+    return float((inter + eps) / (union + eps))
 
+
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--sample", type=str, default=None, help="Image stem or filename, e.g. scratches_23")
     args = parser.parse_args()
 
-    img_path, gt_mask_path = load_pair(args.sample)
+    weights = Path("outputs/unet/best.pt")
+    if not weights.exists():
+        raise FileNotFoundError("Missing weights. Train first: python -m src.segmentation.train_unet")
 
+    img_path, gt_mask_path = load_pair(args.sample)
 
     # Load + preprocess
     img_bgr = cv2.imread(str(img_path))
@@ -71,7 +77,7 @@ def main() -> None:
     img_rgb = cv2.cvtColor(img_bgr_r, cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
     x = torch.from_numpy(img_rgb).permute(2, 0, 1).unsqueeze(0)  # [1,3,H,W]
 
-    # Robust GT binarization (same polarity logic as dataset)
+    # Robust GT binarization (polarity handling: defect is minority class)
     white_pixels = int((gt_r > 0).sum())
     black_pixels = int((gt_r == 0).sum())
     gt = (gt_r > 0) if white_pixels <= black_pixels else (gt_r == 0)
@@ -87,25 +93,27 @@ def main() -> None:
         pred = prob > 0.5
 
     d = dice(pred, gt)
+    j = iou(pred, gt)
+    pred_ratio = float(pred.mean())
+    gt_ratio = float(gt.mean())
 
-    # Save predicted mask (white=defect)
-    pred_mask = (pred.astype(np.uint8) * 255)
+    # Save outputs per sample (no overwriting)
     sample_name = img_path.stem
     out_dir = Path("outputs/unet") / sample_name
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # Pred mask (white=defect)
+    pred_mask = (pred.astype(np.uint8) * 255)
     out_pred = out_dir / "pred_mask.png"
-    out_overlay = out_dir / "pred_overlay.png"
-
     cv2.imwrite(str(out_pred), pred_mask)
 
-    # Save overlay on original resized image
+    # Overlay (prediction) on resized image
     overlay = img_bgr_r.copy()
     red = np.zeros_like(overlay)
     red[:, :, 2] = 255
     alpha = 0.45
     overlay[pred] = (alpha * red[pred] + (1 - alpha) * overlay[pred]).astype(np.uint8)
-
+    out_overlay = out_dir / "pred_overlay.png"
     cv2.imwrite(str(out_overlay), overlay)
 
     # Log
@@ -115,13 +123,23 @@ def main() -> None:
         dataset_name="NEU-DET (Fiji masks)",
         notes=f"sample={img_path.name} weights=best.pt thr=0.5",
     )
-    log_metrics(run_id, {"dice_vs_fiji": float(d)})
+    log_metrics(
+        run_id,
+        {
+            "dice_vs_fiji": float(d),
+            "iou_vs_fiji": float(j),
+            "pred_defect_ratio": float(pred_ratio),
+            "gt_defect_ratio": float(gt_ratio),
+        },
+    )
 
     print(f"Image: {img_path}")
     print(f"GT mask: {gt_mask_path}")
     print(f"Saved pred mask: {out_pred.resolve()}")
     print(f"Saved overlay:  {out_overlay.resolve()}")
     print(f"Dice vs Fiji: {d:.4f}")
+    print(f"IoU vs Fiji:  {j:.4f}")
+    print(f"Pred ratio:   {pred_ratio:.4f} | GT ratio: {gt_ratio:.4f}")
     print(f"Logged run_id: {run_id}")
 
 

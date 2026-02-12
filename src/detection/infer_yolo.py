@@ -22,7 +22,7 @@ def main() -> None:
         raise FileNotFoundError("Run: python -m src.data.make_dataset first")
 
     # Load YOLOv8 nano pretrained (we'll fine-tune later)
-    model = YOLO("yolov8n.pt")
+    model = YOLO("yolov8x.pt")
 
     # Run inference
     results = model(str(img_path))
