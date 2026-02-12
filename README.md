@@ -142,4 +142,10 @@ Predicted mask:
 
 - U-Net (trained on Fiji masks): Dice vs Fiji mask ≈ Dice vs Fiji: 0.8652
 
+## U-Net Inference Leaderboard (SQLite → CSV)
+
+Export a leaderboard of U-Net inference runs (Dice/IoU vs Fiji masks):
+
+```bash
+python -m src.segmentation.export_unet_leaderboard
 
