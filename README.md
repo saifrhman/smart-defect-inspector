@@ -1,4 +1,57 @@
-# smart-defect-inspector
+# Smart Defect Inspector
+
+Smart Defect Inspector is an end-to-end computer vision and image analysis project designed to demonstrate practical ML engineering, classical image processing, and reproducible experimentation workflows.
+
+The project simulates a real-world defect inspection pipeline used in industrial quality control, materials analysis, and imaging-based diagnostics.
+
+It integrates:
+
+- Classical image processing (OpenCV, Fiji/ImageJ)
+- Deep learning (YOLOv8, U-Net)
+- Segmentation and detection workflows
+- Experiment tracking with SQLite
+- Automated reporting and visualization
+
+---
+
+##  Key Capabilities
+
+✔ Image preprocessing & enhancement  
+✔ Defect detection (YOLOv8)  
+✔ Pixel-level segmentation (U-Net)  
+✔ Classical CV baseline (Fiji/ImageJ)  
+✔ Mask analytics & defect quantification  
+✔ Reproducible experiment tracking (SQLite)  
+✔ CSV metric export & leaderboard generation  
+
+---
+
+##  Project Motivation
+
+Modern inspection systems require a hybrid approach combining:
+
+- Classical computer vision techniques
+- Deep learning models
+- Quantitative validation
+- Reproducible experiment management
+
+This project demonstrates how these components interact within a structured ML pipeline.
+
+---
+
+##  Tech Stack
+
+- Python
+- OpenCV
+- PyTorch
+- Ultralytics YOLOv8
+- Fiji / ImageJ
+- SQLite
+- Matplotlib
+
+**Summary:**  
+Raw images → Preprocessing → Classical CV baseline (Fiji) → DL detection (YOLO) → DL segmentation (U-Net) → Metrics → SQLite logging → Reports
+
 
 ## Quickstart
 
@@ -148,4 +201,13 @@ Export a leaderboard of U-Net inference runs (Dice/IoU vs Fiji masks):
 
 ```bash
 python -m src.segmentation.export_unet_leaderboard
+
+Output:
+
+outputs/unet_leaderboard.csv
+
+
+## Quick “Top 5” preview
+head -n 6 outputs/unet_leaderboard.csv
+
 
