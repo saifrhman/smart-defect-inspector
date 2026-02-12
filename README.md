@@ -141,6 +141,19 @@ This figure compares a classical Fiji/ImageJ mask (threshold-based baseline) aga
 
 ![Fiji vs U-Net](docs/images/fiji_vs_unet.png)
 
+## Comparison Gallery (5 random samples)
+
+Below are 5 randomly selected samples comparing Fiji/ImageJ masks vs U-Net predictions:
+
+<img src="docs/images/gallery/scratches_104_fiji_vs_unet.png" width="49%"/>
+<img src="docs/images/gallery/scratches_162_fiji_vs_unet.png" width="49%"/>
+
+<img src="docs/images/gallery/scratches_53_fiji_vs_unet.png" width="49%"/>
+<img src="docs/images/gallery/scratches_124_fiji_vs_unet.png" width="49%"/>
+
+<img src="docs/images/gallery/scratches_3_fiji_vs_unet.png" width="49%"/>
+
+
 ## Reproducible Reports
 
 Experiment runs, metrics, and image analysis outputs are stored in:
