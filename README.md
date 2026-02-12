@@ -210,4 +210,9 @@ outputs/unet_leaderboard.csv
 ## Quick “Top 5” preview
 head -n 6 outputs/unet_leaderboard.csv
 
+## Model Evaluation: Fiji vs U-Net
+
+This figure compares a classical Fiji/ImageJ mask (threshold-based baseline) against the U-Net segmentation prediction trained on Fiji-generated masks.
+
+![Fiji vs U-Net](docs/images/fiji_vs_unet.png)
 
