@@ -132,4 +132,14 @@ Hybrid CV workflows
 ### Fiji defect ratio distribution (from SQLite)
 ![Defect Ratio Histogram](docs/images/defect_ratio_hist.png)
 
+### U-Net Segmentation (trained on Fiji masks)
+![U-Net Overlay](docs/images/unet_pred_overlay.png)
+
+Predicted mask:
+![U-Net Mask](docs/images/unet_pred_mask.png)
+
+## Results (current)
+
+- U-Net (trained on Fiji masks): Dice vs Fiji mask ≈ Dice vs Fiji: 0.8652
+
 
