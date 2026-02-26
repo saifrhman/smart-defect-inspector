@@ -16,13 +16,13 @@ It integrates:
 
 ##  Key Capabilities
 
-✔ Image preprocessing & enhancement  
-✔ Defect detection (YOLOv8)  
-✔ Pixel-level segmentation (U-Net)  
-✔ Classical CV baseline (Fiji/ImageJ)  
-✔ Mask analytics & defect quantification  
-✔ Reproducible experiment tracking (SQLite)  
-✔ CSV metric export & leaderboard generation  
+* Image preprocessing & enhancement  
+* Defect detection (YOLOv8)  
+* Pixel-level segmentation (U-Net)  
+* Classical CV baseline (Fiji/ImageJ)  
+* Mask analytics & defect quantification  
+* Reproducible experiment tracking (SQLite)  
+* CSV metric export & leaderboard generation  
 
 ---
 
